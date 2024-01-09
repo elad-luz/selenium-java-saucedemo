@@ -1,0 +1,526 @@
+==============================
+ ★  General INFO by Topics  ★
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+This file contains my private notes regarding this task.
+The <projectName> is: 'TestAutomationSauceDemo'…
+_________
+---------
+ Project
+=========
+Create an automation framework for  -›  https://www.saucedemo.com/
+=•	Before starting automation, I wrote 2 examples of TestCases document (test title, step description, expected result…)
+	Textual STP (test planning) -> /TestAutomationSauceDemo/all-info-of-project/saucedemoSTP.txt (it is only a show-case)
+	Excel STD (tests scenarios) -> /TestAutomationSauceDemo/all-info-of-project/saucedemoTD.xlsx (this is for test-cases)
+=•	For each WebPage in the tested site, I have several test-scenarios in a dedicated class (covering the STD).
+=•	I am making use of Page-Object-Model (see description below) ->
+	With BasePage, Page-Factory (@FindBy annotation for WebElements), and with functions to support tests -&- validation…
+=•	I am making use TestNG annotations (and not using a 'main' class) in the BaseTest and Test classes…
+=•	I make use of several type  of DataProvider option in my tests.
+=•	I use assertions to decide if tests passed/failed (some are inherit from page classes).
+=•	I am using Maven as well, which wraps everything (and use the testng.xml to run all classes together).
+=•	Reports can be seen on the TestNG test-output folder or by generating an Allure Report.
+=•	I will add Jenkins in order to run everything.
+______________________________________
+--------------------------------------
+ Conversion to Maven - Changes needed
+======================================
+After Changing Project Name -or- Converting the project to Maven, you need to change several path-locations with-in code of the followings:
+-> in this case <project> is: 'TestAutomationSauceDemo'  -&-  tested <website folder name> is: 'saucedemo'
+1.	in class:  ConfPropertiesUtil  -of-  package:  /<project>/src/test/java/saucedemo.utilities  --> changed to website-folder (as needed)…
+	change path to: FileInputStream("./src/test/resources/saucedemo/configuration.properties")) |--> No need project (relative), only Site!
+2.	in class:  BaseTest  -of-  package:  /<project>/src/test/java/saucedemo.testcases  --> changed to website-folder (as needed)
+	change path to: FileUtils.copyFile(srcFile, new File("./test-screenshots/"  ...  |---> Needed only once --> No need project (relative)!
+3.	in class:  Test1_Login  -of-  package:  /<project>/src/test/java/saucedemo.testcases  --> changed to website-folder (as needed)…
+	change path to: excelPath = System.getProperty("user.dir") + "/src/test/resources/saucedemo/inputTestData.xlsx";  |--> (relative path)!
+4.	Make sure <project>\testng.xml is pointing to proper PROJECT !!!
+5.	Make sure <project>\pom.xml is pointing to proper PROJECT in <artifactId> & <name> etc.
+___________________________________________
+-------------------------------------------
+ Page Object Model - a general description
+===========================================
+This is a design pattern, used in test automation that creates Object Repository for web UI elements.
+Each logical Web-Page (or UI-component) will get its own Page class that contains:
+	- Elements found.byLocator (see description below) ->
+	- Operation Methods done on those Elements
+	- Verification Methods (for success\failure) -> To be used later-on by the Test performed in relevant Test class !
+	Selenium operations themselves would be wrapped in a BasePage class (which'll be the parent of all page classes) !
+There would be 2 different packages - one to hold Pages (BasePage + PageObjects), the other for Testing each Page!
+	PackageA -> company.module.pageobjects (locating elements and wrapping them under functionality methods)
+	 	BasePage wrapping Selenium operations methods, to be used by all the classes (which would inherit it)
+	 	Pages classes - each will have distinguished name, that uniquely identify it in system, and will contain
+	 	 - declare & init the elements on page (using locators) - we can easily add-to as we go along, as needed
+	 	 - exposed action methods (wrapping & making use of the elements as needed), that would be used in tests
+	 	 - exposed validation methods that would be used in tests - to assist with verification if parts passing
+	 	 note that each page will need a variable to allow working: WebDriver driver; - which would be inherited
+	PackageB -> company.module.tests (using a functional operations of page-objects, to generate test-cases)
+	 	BaseTest wrapping TestNG methods, to be used by all the classes (which would inherit it)
+	 	Test classes - each will contain:
+	 	 - exposed focused-scenarios mimicking functional-test cases scripts
+	
+Order of action we would do:
+1.	understand what is being tested, and what is needed to be implemented for that test-cases scenarios
+2.	copy the basic 'BasePage' (attached class) to PackageA (POs) -> and add capabilities if needed to !
+3.	add Pages witch find elements properly & implement methods operations on them, as needed by Tests !
+	note that you got to understand which input each method requires from test. and what is its output.
+	each extends BasePage and have a constructor that initializes the properties of super = driver etc.
+4.	can add Hierarchy: implement 'Common' abstract-layer, extends BasePage & acts as super to PageClass
+	there can be some Common-Elements & Page should extend a Common only if fits (otherwise, BasePage)!
+5.	add Tests witch pass driver to each page & make use of its' methods to follow relevant Test Scripts
+6.	afterwards, we'll add TestNG capabilities + BaseTest & Assertion of TestCase methods in TestClasses
+	
+Advantages:
+The advantage of the model is that it reduces code duplication and improves test maintenance => Keep it SIMPLE !!!
+Under this model, for each web page in the application, there should be a corresponding Page Class.
+This Page class will identify the WebElements of that web page -and also contains-
+Page methods which perform operations on the WebElements. Name of methods should represent the task they perform -
+e.g if a loader is waiting for the payment Screen to appear, POM method name can be waitForPaymentScreenDisplay().
+	- Makes code maintainable.
+	- Makes code reusable.
+	- Makes code readable (and more easy to write).
+	- clean separation between the test code and page-specific code, such as locators, their use and layout.
+	- single repository for the services or operations the page offers rather than scattered throughout the tests.
+_____________
+-------------
+ PageFactory
+=============
+Page Factory is the way we write great code for locating & dealing with the elements, which makes life much easy !
+The class provided by Selenium WebDriver, supports use of @FindBy & initElements method (for locate & initialize).
+It mainly let us deal with locating an element once -and- make use of it, as many times we need in our code.
+The elements located using PageFactory is done only upon usage within page, when needed - produce more stability !
+
+Advantages:
+- Makes code maintainable -
+	Reduction of code duplication and thus improvement of maintenance!
+	Since the element is located separate from the use of it in Methods, updating the code (change & add) is easy!
+- Makes code reusable -
+	For multiple methods using same web-elements, no need to code for same element in every method.
+- Makes code readable (and more easy to write) -
+	All that makes it easy to write & Others can also easily read through the project and test scripts:
+	clean separation between the locator elements and their use in code.
+	single place for locators and operations (rather than all scattered throughout the Page class).
+
+--> NOTE: because we want to propagate PageFactory up to all our Pages, best thing is to use 'BasePage' for this !
+__________________
+------------------
+ TestNG framework
+==================
+This is a powerful testing framework, an enhanced version of JUnit which was in use for a long time before.
+NG stands for 'Next Generation'. Annotations help us organize the tests easily. Flexible test configuration !
+This testing framework (open source libraries) make it more powerful and easier to use, such as:
+Annotations.
+Run your tests in arbitrarily big thread pools with various policies available (all methods - each in own thread).
+Test that your code is multithread safe.
+Flexible test configuration.
+Support for data-driven testing (with @DataProvider).
+Support for parameters.
+Powerful execution model (no more TestSuite).
+Supported by a variety of tools and plug-ins (Eclipse, IDEA, Maven, etc...).
+Embeds BeanShell for further flexibility.
+Default JDK functions for runtime and logging (no dependencies).
+Dependent methods for application server testing.
+TestNG is designed to cover all categories of tests:  unit, functional, end-to-end, integration, etc...
+
+Advantages:
+- Makes code maintainable.
+- Makes code reusable.
+- Makes code readable (and more easy to write).
+
+--> NOTE: because we want to propagate PageFactory up to all our Pages, best thing is to use 'BasePage' for this !
+------------------------------------------------------------------------------------------------------------------
+
+Order of action we would do:
+To work with it, you need to download & install (selection: https://testng.org/testng-eclipse-update-site) ->
+Following step by step -> installing TestNG in Eclipse: https://www.guru99.com/install-testng-in-eclipse.html
+	1) Open Eclipse Help > Eclipse Marketplace...  ->  https://marketplace.eclipse.org/content/testng-eclipse
+	2) Search - Find "TestNG" >
+	3) TestNG for Eclipse ----> Install (relevant components) + Accept the license agreement...
+	4) Wait for installation... Ignore security warning if occurs = Install anyway!
+	5) Needs RESTART of eclipse!
+Then: Restart, verify if TestNG for Eclipse was indeed successfully installed  (Click Window > Show View > Other).
+Also: Window > Preferences > TestNG...
+More: https://www.guru99.com/all-about-testng-and-selenium.html
+Now, instead of running tests from main, you can run them from TestNG using @Test
+Add @Test above the method you want to test (remove the main) public void tc_01_Login(){
+and you will be asked to add Library of TestNG to Project + also to do: import org.testng.annotations.Test;
+When Running - choose "Run as TestNG" !
+___________
+-----------
+ ASSERTING
+===========
+Test Component can use the Assert method capabilities -> 
+Assertions in TestNG are a way to verify that the expected result and the actual result matched or not.
+If we could decide the outcome on different small methods using assertions in our test case -->
+We can determine whether our test failed or passed overall. ---> see: 
+~ assertEquals: This is used to compare expected and actual values in the selenium.
+  The assertion passes with no exception whenever the expected and actual values are same.
+  But, if actual and expected values are not same - assert fails with exception & test is marked as failed!
+  What is assertTrue in TestNG?
+~ assertTrue: This method asserts if the condition is true or not. If not, then the exception error is thrown.
+  Assert. assertTrue(condition, message) : Similar to the previous method with an addition of message,
+  which is shown on the console when the assertion fails along with the exception.
+~ assertThat: the only assertion in JUnit 4, that has a reverse order of the parameters compared to other asserts.
+  In this case, the assertion has an optional failure message, the actual value, and a Matcher object.
+________________________________________
+----------------------------------------
+ Resources & Utilities for DataProvider
+========================================
+/TestAutomationSauceDemo/src/test/resources/saucedemo > How to work with this kind of DataProvider:
+package saucedemo.resources; // And makes Use of package: /SeleniumProject/src/saucedemo/utilities.
+/** to use an external file for dynamic value setting of code variables, there are several options:
+	you can use a configuration.properties -or- an excel file (each requires a Util to fetch data).
+___________________________________________________________________________________________________
+
+1.	using a 'configuration.properties':
+	add under separated "data" package your 'configuration.properties' file
+	the file must end with type '.properties' and contain key= value pares:
+	# comments
+	key= value
+
+	NOTE:
+	to read from file to code, you need a util added in a separated package
+	the utility is another java class that looks like:
+	--------------------------------------------------
+	
+add under separated "data" package your 'configuration.properties' file
+the file must end with type '.properties' and contain key= value pares:
+# comments
+key= value
+
+The implementation of this type of read from conf is seen in both:
+- BaseTest -> driver.get(Utils.readProperty("url"));
+- T01_LoginFailures_TestNGDDT (LoginFailedUsingConfProperties)
+
+NOTE:
+to read from file to code, you need a util added in a separated package
+the utility is another java class that looks like:
+--------------------------------------------------
+
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.util.Properties;
+
+public class ConfPropertiesUtil { // can be used (as BasePage) in many Projects !
+
+	// 	the following method is a tool to read a property value (from the config.prop file)...
+	// 	the 'static' states you don't need to create an object - can actually use it directly:
+	// 	example of usage from anywhere in the src -->  Utils.readProperty("url");  -->  or as:
+	// 	used in BaseTest -->  driver.get(Utils.readProperty("url"));  <-----------------------
+
+	public static String readProperty(String key) { // method get String called key = property
+		// we want to read the .properties file & get the value, correlative to that key given
+		String value=""; // declare & init a String variable for getting the given key's value
+
+		// path defines where the file resides: in this case, a relative path under my project
+		// NOTE: 'InputStream' works with a File -> so it needs to be wrapped with Try/Catch !
+		try (InputStream input = new FileInputStream("./src/saucedemo/resources/configuration.properties")) {
+			// declare & initialize a Properties object (to host the properties file in memory)
+			Properties prop = new Properties();
+
+			// load the properties file to memory (into above created ^ prop object)
+			prop.load(input);
+
+			// reading the properties from file (get value of a key):
+			// get the property value (also print out) of given key - and, set it to variable!
+			value = prop.getProperty(key);
+			// System.out.println(prop.getProperty(key));
+
+		} catch (Exception e) {
+		}
+		return value; // method returns the value of the key from related .properties file ...
+	}
+}	
+--> EXAMPLES can be found under https://mkyong.com/java/java-properties-file-examples/
+	you can also add a method that write the property value...
+___________________________________________________________________________________________________
+
+2.	using an 'EXCEL' file [you need to prepare the excel-file, and give a name of test to each tab:
+	save in separated "data" package, 'testName.xlsx' file (edited from excel -> first row = Title)
+	the file must able to be opened in excel and contain columns with data (not first row -> Title)
+	NOTE:
+	to read from this file by code into memory, you need a util added in a separated package Utils!
+	following method is a 'tool' to read a property value from a given excel file - to work with it
+	you NEED importing some jars to your project (poi is a lib that helps use all Microsoft tools):
+	download from -> https://poi.apache.org/download.html -> Binaries.zip of latest stable release!
+	extract the relevant under -> C:\automation\libs --> under main folder ...libs\poi-bin-5.x.x ->
+	needed jars, also in nested folders -> ALL should be imported to project! rightClick Project ->
+	Properties > Java Build Path > Classpath > Add External Jars (from dirs+ select+ Open) > Apply!
+	Now you could import relevant classes to your class, to be able to use them in relevant methods
+	the utility is another java class...
+	------------------------------------
+	To use this Data, we replicate the known method & just change it a bit to fit our excel:
+
+	@DataProvider
+	public Object[][] getDataFromExcel(){
+		String excelPath = System.getProperty("user.dir") + "/src/saucedemo/resources/inputTestData.xlsx";
+		System.out.println(excelPath);
+		Object[][] table = Excel.getTableArray(excelPath, "loginTest");
+		return table;
+	}
+//	TOOL FROM GAL:
+	~~~~~~~~~~~~~~
+	package utils;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import org.apache.poi.hssf.usermodel.HSSFCell;
+import org.apache.poi.ss.usermodel.CellType;
+import org.apache.poi.xssf.usermodel.XSSFCell;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+
+public class Excel {
+	
+	private static XSSFSheet ExcelWSheet;
+	private static XSSFWorkbook ExcelWBook;
+	private static XSSFCell Cell;
+	
+	// Read the Excel data and convert to a Matrix
+	// @param - file path, sheet name
+	public static Object[][] getTableArray(String filePath, String sheetName){
+		Object[][]tabArray = null;
+
+		try{
+			FileInputStream ExcelFile = new FileInputStream(filePath);
+			ExcelWBook = new XSSFWorkbook(ExcelFile);
+			ExcelWSheet = ExcelWBook.getSheet(sheetName);
+
+			int ci=1,cj=0;
+			int totalRows = ExcelWSheet.getPhysicalNumberOfRows();
+			int totalCols = ExcelWSheet.getRow(0).getLastCellNum();
+			tabArray = new Object[totalRows-1][totalCols];
+			for (int i=0; ci<totalRows;ci++){
+				int j=0;
+				for (cj=0; cj<totalCols; cj++){
+					Object data = getCellData(ci, cj);
+					tabArray[i][j] = data;
+					j++;
+				}
+				i++;
+			}
+		} catch (FileNotFoundException ex){
+			System.out.println("Exception! Excel file could not be found!");
+		} catch (IOException ex){
+			System.out.println("Exception! IO error occurred while trying to load excel file!");
+		} catch (Exception e) {
+			System.out.println("Exception! Error occurred while trying to load excel file!");
+		}
+		return tabArray;
+	}
+	
+	// Read the test data from the Excel cell
+	// @param - Row number and Column number:
+	private static Object getCellData(int RowNum, int ColNum) throws Exception {
+		try {
+			String CellData = "";
+			double numericCellData;
+			long intCellData;
+			double doubleCellData;
+			Boolean booleanCellData= false;
+
+			Cell = ExcelWSheet.getRow(RowNum).getCell(ColNum);
+			if (Cell.getCellTypeEnum() == CellType.STRING)
+				CellData = Cell.getStringCellValue();
+			else if (Cell.getCellTypeEnum() == CellType.NUMERIC){
+				numericCellData = Cell.getNumericCellValue();
+				intCellData = (long)numericCellData;
+				doubleCellData = (double)numericCellData;
+				if (doubleCellData % 1 == 0)
+					CellData = String.valueOf(intCellData);
+				else
+					CellData = String.valueOf(doubleCellData);
+			}
+			else if (Cell.getCellTypeEnum() == CellType.BOOLEAN){
+				booleanCellData = Cell.getBooleanCellValue();
+				CellData = String.valueOf(booleanCellData);
+			}
+			return CellData;
+		} catch (Exception e) {
+			return "";
+		}
+	}
+}	
+*/
+___________
+-----------
+ Maven POM
+===========
+A Project Object Model or POM is the fundamental unit of work in Maven.
+It is an XML file that contains information about the project and configuration details used by Maven to build the project.
+It contains default values for most projects.
+
+NOTE -> You need to work on the Package code classes, not in the src folder
+Also -> IF you use 'params' in testNG.xml <parameter name=""baseUrl" value="https://www.saucedemo.com/" />
+		and you want to run a specific test class, via maven (bypassing the testNG.xml), you'll need to:
+		put the param in the pom xml under <systemPropertyVariables>
+		<baseUrl>https://www.saucedemo.com/</baseUrl>
+		Using Property Param via mvn pom.xml (instead of via testng.xml) is not relevant in my case --
+		Because I am using a dedicated properties file (residing in resources) !!!
+
+RUNing Examples:
+~~~~~~~~~~~~~~~~
+from project path, via CMD run maven (suiteXmlFile (tag in pom.xml), states which testNG file to use for the Run & can be edited)
+pom.xml reside in root of project -> Run the CMD from Project folder --> Change to the directory in which the POM.xml resides in:
+	Open CMD -> get to the project folder -> issue run command  (with clean):
+		cd C:\Users\USER\eclipse-workspace\<project> = cd C:\Users\USER\eclipse-workspace\TestAutomationSauceDemo
+		C:\Users\USER\eclipse-workspace\SeleniumWithMavenProject>  mvn clean test
+	TEST:
+		mvn clean test	Running by default what-ever is set in suiteXmlFiles - a specific file
+		(or a dynamic file need to be stated = currently set)…
+		Note: check-out tag <suiteXmlFiles> below, for MVN run setting !
+	USE a dynamic stated TestNG.xml file:
+		mvn clean test -DsuiteXmlFile=testng.xml
+		mvn clean test -DsuiteXmlFile=testngTMP.xml
+		mvn clean test -DsuiteXmlFile=testngEdge.xml
+		mvn clean test -DsuiteXmlFile=testngChrome.xml
+		mvn clean test -DsuiteXmlFile=testngBrowserDefault.xml
+	MAIN:
+		mvn exec:java -Dexec.mainClass="tempApp.MyApp"
+		mvn exec:java -Dexec.mainClass="tempApp.Params" -Dexec.args="El- Ad!"
+________________
+----------------
+ Allure Reports
+================
+
+Allure Annotations
+~~~~~~~~~~~~~~~~~~
+Allure Report defines four levels of severity of failures:
+@Severity(SeverityLevel.CRITICAL)
+Blocker: A blocker is a severe defect that blocks the application's functionality.
+The application can only proceed further with fixing the issue.
+Critical: A critical defect is a high-priority issue that can cause significant application functionality problems.
+Normal: A normal defect is a medium-priority issue that does not cause significant application functionality problems.
+Minor: A minor defect is a low-priority issue that does not affect the application's functionality,
+but may cause some inconvenience or confusion for the end users.
+
+@Step Annotation -- To create a step:
+Create method with any visibility modifier (public, private, protected) with step logic and annotate it with @Step annotation.
+You can optionally specify step name in annotation attributes.
+Call this method inside test method.
+An example:
+@Test
+public void someTest() throws Exception {
+    //Some code...
+    stepLogic();
+    //Some more assertions...
+}
+@Step("This is step 1")
+private void step1Logic() {
+    // Step1 implementation
+} 
+@Step("This is step 2")
+private void step2Logic() {
+    // Step2 implementation
+}
+MORE  --->
+EXAMPLE 1:
+@Step("Login-attempt with Credentials in Text-fields: User='{0}' & Pass='{1}' -> Commit!") // 0 = first Argument -&- 1 = second Argument
+// OR Like this:   @Step("login with user: {username} and password: {password}")
+	public void login(String username, String password) { // needed username + password input (the test will go to set this method vars)
+		fillText(usernameField, username);
+		fillText(passwordField, password);
+		click(loginBtn);
+	}
+------------------------
+Allure Report will show:
+Login-attempt with Credentials in Text-fields: User='ToFailAssert' & Pass='ScreenShot' -> Commit!                         [2 parameters]
+username	ToFailAssert
+password	ScreenShot
+
+EXAMPLE 2:
+You can also use parameters for the @Step annotation. For example, if the method accepts some variables:
+
+@Step("Get the maximum between {a} and {b}")
+public int max(int a, int b){
+    //implementation
+}
+EXAMPLE 3:
+If you need to use any object, you can override toString() method, or use needed parameters:
+
+public class User {
+     private String name;
+     private String password;
+     ...
+}
+@Step("Type {user.name} / {user.password}.")
+public void loginWith(User user) {
+     ...
+}
+Allure Report Annotations to be integrated with JIRA
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+@Epic("Shopping Cart")
+@Feature("Add To Cart")
+@Story("As a User when I add item to Cart than cancel the item should be deleted")
+public void test() {
+}
+Allure Report Attachments Util
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Create the Allure Report - Attachments Util: capture & Attach Text & Screenshots !
+package saucedemo.utilities; // Allure Report - Attachments Utils
+
+import org.openqa.selenium.OutputType;
+import org.openqa.selenium.TakesScreenshot;
+import org.openqa.selenium.WebDriver;
+import io.qameta.allure.Attachment;
+
+public class ReportAttachmentsUtil { // for Allure Attachments
+
+	// Add Text attachments
+	@Attachment(value = "{0}", type = "text/plain", fileExtension = ".txt")
+	public static String attachText(String message) {
+		return message;
+	}	
+	// Add Screenshot attachments (needs imports) **
+	@Attachment(value = "Page Screenshot", type = "image/png", fileExtension = ".png")
+	static byte[] attachScreenshot(WebDriver driver) {
+		return ((TakesScreenshot) driver).getScreenshotAs(OutputType.BYTES);
+	}
+}
+** NOTE: To use this you to also properly add to the BaseTest Class
+in the @BeforeClass
+setup(ITestContext testContext) {
+testContext.setAttribute("WebDriver", this.driver);
+
+-> AND Add following attachment text in code of test (to print in Allure Report)
+ReportAttachmentsUtil.attachText("some text");
+
+// the message of Assert would be inserted as attachment to Allure Report (using relevant Util):
+// ReportUtil.attachText("Add here the text you want"); // needs import Util (in Project), for add text attachments to Allure !
+// Note the text can be anything from a comment to Exception -&- come to replace any out-print you wish to present in the log !
+
+-> AND -> You need to add Listener under .utilities;
+public class ListenersUtil extends TestListenerAdapter {
+	// using “ITestResult” interface for taking & attaching Screenshots to Report on Test-Failure (needs IMPORTS)
+	@Override
+	public void onTestFailure(ITestResult result) {
+		Object webDriverAttribute = result.getTestContext().getAttribute("WebDriver");
+		if (webDriverAttribute instanceof WebDriver) {
+			ReportAttachmentsUtil.attachScreenshot((WebDriver) webDriverAttribute);
+		}
+	}
+}
+-> AND Add the listener to testng.xml
+<suite name="Suite">
+	<listeners>
+		<listener class-name="saucedemo.utilities.ListenersUtil"></listener>
+	</listeners>
+
+Running Allure Report
+~~~~~~~~~~~~~~~~~~~~~
+1. After Setting Allure in POM.xml -> Open that dir via CMD >	cd C:\Users\USER\eclipse-workspace\<project>
+2. Run the TestNG.xml (to issue the tests) via Maven -> CMD >	mvn clean test -DsuiteXmlFile=testng.xml
+					if you want to run a specific testClass >	mvn clean test -DsuiteXmlFile=testngTMP.xml		-> Edit this .xml…
+2. To generate the Report -> issue via same location in CMD >	mvn allure:serve
+3. After Report opened -> close the script to exit, via CMD >	click Ctrl+C  -&-  Y  (to terminate batch job)
+4. to clean the command prompt issue: 							cls
+5. Afterwards -> clean the Allure-Results files from folder !
+_____________
+-------------
+ Coding Tips 
+=============
+Do…
+
+
+☑ ★ ◄ ▲ ▼ ► ▸ ‣ » › ‹ ¤  ◌̇  ․ • ° · ⊙ ⊚ ⊛ ⊡ ⊶ ⋯ …
+___________
+--  END  --

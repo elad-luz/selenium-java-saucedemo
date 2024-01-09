@@ -1,0 +1,222 @@
+<!--	POM & EXECUTION
+		===============
+		Run MVN:
+			cd C:\Users\USER\eclipse-workspace\<project>   (running via CMD from Priject-root folder -> Change to the directory in which the project POM.xml resides in)
+		TEST:
+			mvn clean test -DsuiteXmlFile=testng.xml   (<suiteXmlFile>${suiteXmlFile}</suiteXmlFile> = using the stated TestNG.xml file)
+		MAIN:
+			mvn exec:java -Dexec.mainClass="tempApp.Params" -Dexec.args="El- Ad!"   (if no params in use -> the args section not needed)
+		Allure:
+			mvn allure:serve   (to generate the Report -> issued via same location in CMD) 
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>elad.luz.automation</groupId>
+	<artifactId>TestAutomationSauceDemo</artifactId>  <!-- Selenium Project (with TestNG & Maven) -->
+	<version>0.0.1-SNAPSHOT</version>
+	<name>TestAutomationSauceDemo</name>
+	<!-- Add properties & dependencies  |  Format-Indentations of file, do: ctrl+A & ctrl+shift+f -->
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<aspectj.version>1.9.9.1</aspectj.version>
+	</properties>
+	<dependencyManagement>
+		<dependencies>
+			<!-- https://mvnrepository.com/artifact/com.google.guava/guava -->
+			<dependency>
+				<groupId>com.google.guava</groupId>
+				<artifactId>guava</artifactId>
+				<version>31.0.1-jre</version>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+	<dependencies>
+		<!-- https://mvnrepository.com/artifact/org.seleniumhq.selenium/selenium-java -->
+		<dependency>
+			<groupId>org.seleniumhq.selenium</groupId>
+			<artifactId>selenium-java</artifactId>
+			<version>4.8.3</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.aspectj/aspectjweaver -->
+		<dependency>
+			<groupId>org.aspectj</groupId>
+			<artifactId>aspectjweaver</artifactId>
+			<version>${aspectj.version}</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.testng/testng -->
+		<dependency>
+			<groupId>org.testng</groupId>
+			<artifactId>testng</artifactId>
+			<version>7.5</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.apache.poi/poi-ooxml -->
+		<dependency>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>poi-ooxml</artifactId>
+			<version>5.2.2</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.apache.commons/commons-lang3 -->
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+			<version>3.12.0</version>
+		</dependency>
+		<!-- Other NEW dependencies -->
+		<dependency>
+			<groupId>commons-io</groupId>
+			<artifactId>commons-io</artifactId>
+			<version>2.11.0</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.apache.commons/commons-text -->
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-text</artifactId>
+			<version>1.10.0</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/io.rest-assured/rest-assured -->
+		<dependency>
+			<groupId>io.rest-assured</groupId>
+			<artifactId>rest-assured</artifactId>
+			<version>5.2.0</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/com.github.javafaker/javafaker -->
+		<dependency>
+			<groupId>com.github.javafaker</groupId>
+			<artifactId>javafaker</artifactId>
+			<version>1.0.2</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/com.github.automatedowl/allure-environment-writer -->
+		<dependency>
+			<groupId>com.github.automatedowl</groupId>
+			<artifactId>allure-environment-writer</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-simple -->
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-simple</artifactId>
+			<version>2.0.7</version>
+			<scope>test</scope>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-api -->
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>2.0.6</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/io.github.bonigarcia/webdrivermanager -->
+		<dependency>
+			<groupId>io.github.bonigarcia</groupId>
+			<artifactId>webdrivermanager</artifactId>
+			<!-- <version>5.3.2</version> - PREVIOUS -->
+			<version>5.5.3</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/io.qameta.allure/allure-testng -->
+		<dependency>
+			<groupId>io.qameta.allure</groupId>
+			<artifactId>allure-testng</artifactId>
+			<version>2.19.0</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/io.qameta.allure/allure-rest-assured -->
+		<dependency>
+			<groupId>io.qameta.allure</groupId>
+			<artifactId>allure-rest-assured</artifactId>
+			<version>2.19.0</version>
+		</dependency>
+<!-- Adding Dependencies for API -->
+		<!-- Apache HttpClient -->
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpclient</artifactId>
+			<version>4.5.13</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/com.google.code.gson/gson -->
+		<dependency>
+			<groupId>com.google.code.gson</groupId>
+			<artifactId>gson</artifactId>
+			<version>2.8.9</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind -->
+		<dependency>
+		    <groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+			<version>2.15.2</version> <!-- Use the latest version -->
+		</dependency>
+<!-- END of dependencies -->
+	</dependencies>
+	<build>
+		<plugins>
+			<!-- https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-compiler-plugin -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.10.1</version>
+				<configuration>
+					<source>1.8</source>
+					<target>1.8</target>
+					<encoding>UTF-8</encoding>
+				</configuration>
+			</plugin>
+			<!-- https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-surefire-plugin -->
+			<!-- https://maven.apache.org/surefire/maven-surefire-plugin/examples/testng.html -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>3.0.0</version>
+				<configuration>
+					<suiteXmlFiles>
+						<!-- Add one or more testNG.xml files to Run via CMD project filder (cd C:\Users\USER\eclipse-workspace\<project-folder>): mvn clean test ... -->
+						<!-- <suiteXmlFile>testng.xml</suiteXmlFile> -->
+						<!-- <suiteXmlFile>testngTEMP.xml</suiteXmlFile> -->
+						<!-- <suiteXmlFile>testngChrome.xml</suiteXmlFile> (need to pass from tmp-folder to root-project-folder) -->
+						<!-- <suiteXmlFile>testngBrowserDefault.xml</suiteXmlFile>  (need to pass from tmp-folder to root-project-folder) -->
+						<!-- for dynamic test run using param for file -> uss the command: mvn clean test -DsuiteXmlFile=testngTmp.xml -->
+						<suiteXmlFile>${suiteXmlFile}</suiteXmlFile> <!-- General RUN by param passed to MVN -->
+						<!-- OR you can use location specific: <suiteXmlFile>${basedir}/src/test/resources/suites/testSanity.xml</suiteXmlFile> -->
+					</suiteXmlFiles>
+					<argLine>
+                        -javaagent:"${settings.localRepository}/org/aspectj/aspectjweaver/${aspectj.version}/aspectjweaver-${aspectj.version}.jar"
+                    </argLine>
+					<systemProperties>
+						<allure.results.directory>${basedir}/target/allure-results</allure.results.directory>
+						<allure.link.issue.pattern>https://example.org/issue/{}</allure.link.issue.pattern>
+						<allure.link.tms.pattern>https://example.org/tms/{}</allure.link.tms.pattern>
+						<!-- Using Properties -->
+						<!-- <property> -->
+						<!-- <name>a.b.c</name> -->
+						<!-- <value>xyz</value> -->
+						<!-- </property> -->
+					</systemProperties>
+					<systemPropertyVariables>
+						<testng.dtd.http>true</testng.dtd.http>
+						<!-- Using Property Param via mvn pom.xml (instead of via testng.xml) - not relevant in my case (I am using a dedicated properties file) -->
+						<!-- <baseUrl>https://www.saucedemo.com/</baseUrl> -->
+					</systemPropertyVariables>
+				</configuration>
+			</plugin>
+			<!-- https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-clean-plugin -->
+			<plugin>
+				<artifactId>maven-clean-plugin</artifactId>
+				<version>3.1.0</version>
+				<configuration>
+					<filesets>
+						<fileset> <!-- I will let the clean start at base level & look by drilling down, for each .log + .png files, to be deleted! -->
+							<directory>${basedir}</directory>
+							<includes>
+								<include>**/*.log</include>
+								<include>**/*.png</include> <!-- .png files to be deleted upon clean are all the screenshots taken upon failed-test -->
+							</includes>
+						</fileset>
+					</filesets>
+					<failOnError>false</failOnError> <!-- IF a file is locked & can't be deleted, but I don't want the clean to fail - I am using: -->
+				</configuration>
+			</plugin>
+			<!-- https://mvnrepository.com/artifact/io.qameta.allure/allure-maven -->
+			<plugin>
+				<groupId>io.qameta.allure</groupId>
+				<artifactId>allure-maven</artifactId>
+				<version>2.10.0</version>
+			</plugin>
+		</plugins>
+	</build>
+</project>
