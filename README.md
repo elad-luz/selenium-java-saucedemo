@@ -8,8 +8,8 @@ This Project is using Selenium with Java, to perform UI Test Automation on Sauce
     - Page Classes
     - Data Source files
     - Test Cases
-        - Full Test-Plan is written in Excel file (but currently, I've covered only a part of it):
-        `<ROOT>\all-info-of-project\SaucedemoTestPlan.xlsx`
+        - `<ROOT>\all-info-of-project\SaucedemoTestPlan.xlsx` - This is the Test-Plan (written in Excel file - currently, only partly covered).
+        
 
 ## Overview
 
