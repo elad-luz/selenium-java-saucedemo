@@ -100,6 +100,6 @@ public class BaseTest { // Need to RUN as TestNG! -> the class wraps common code
 	@Step("After all Tests in class Ended - Test Runner Closes the browser")
 	public void tearDown() { // after finish all tests - close the resource!
 		driver.quit();
-		// System.out.println("\n--- END ---"); // TODO -> REMOVE not needed redundant prints !!!
+		// System.out.println("\n--- END ---");
 	}
 }

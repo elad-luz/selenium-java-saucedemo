@@ -58,7 +58,6 @@ public class ProductsInventoryPage extends Common { // Inventory (products) page
 	/* 	several 'combined' functions (exercises robust & flexibility), to click-on… & get-data etc. (see validation section, bellow…) */
 
 	//	first, I add the predefined 'Items' to a List, using default sort by A to Z (to be used as items-list, in all testing methods) !
-//	☑ TESTED & works properly -> TODO --> Remove comment !
 	public List<String> listItems() { // This could have been set as a separated data-source  ->  There is No Need to Use this in Tests…
 		List<String> item = new ArrayList<>();  // Create a List of Products' Name - each represent an Item  ->  Add values to the list:
 		item.add("Sauce Labs Backpack");
@@ -74,7 +73,6 @@ public class ProductsInventoryPage extends Common { // Inventory (products) page
  *	@param subElement	(String arg, pointing the sub-element. valid values are: "name", "pic", "desc", "price", "button").
  *	@param productName	(String arg, pin-pointing a Product by its itemName. Valid value is any from listItems e.g. "Sauce Labs Onesie")
  */	//	locating the needed sub-element (from its specified list) relevant to operation we want to perform on the item (from list above)
-//	☑ TESTED & works properly -> TODO --> Remove comment !
 	public WebElement findSubElementOfProduct(String subElement, String productName) { // this method would be used by other, see below!
 		List<WebElement> targetList;
 		if (productName.equalsIgnoreCase("Sauce Labs Backpack") ||
@@ -117,7 +115,6 @@ public class ProductsInventoryPage extends Common { // Inventory (products) page
  *	@param subElement	(String arg, pointing the clickable sub-element. valid values are: "name", "pic", "button" = both: add \ remove)
  *	@param productName	(String arg, pin-pointing a Product by its itemName. Valid value is any from listItems e.g. "Sauce Labs Onesie")
  */	//	clicking relevant sub-element (locating the proper, is done using the above method for targeting the proper SubElementOfProduct)
-//	☑ TESTED & works properly -> TODO --> Remove comment !
 	public void clickSubElementOfProduct(String subElement, String productName) { /* valid inputs bellow:
 				productName: should fit product's name || subElement: name, pic, desc, price, button (for ) */
 		WebElement element = findSubElementOfProduct(subElement, productName);
@@ -139,7 +136,6 @@ public class ProductsInventoryPage extends Common { // Inventory (products) page
 	}
 
 	//	adding a specific element to cart (using the clickSubElementOfProduct for a case-specific condition…)
-//	☑ TESTED & works properly -> TODO --> Remove comment !
 	// 
 	public void addProductToCart(String productName) {
 		if (isProductSubElementDataExpected("button", productName, "add")) {
@@ -150,7 +146,6 @@ public class ProductsInventoryPage extends Common { // Inventory (products) page
 	}
 	
 	//	removing a specific element from cart (using the clickSubElementOfProduct for a case-specific condition…)
-//	☑ TESTED & works properly -> TODO --> Remove comment !
 	public void removeProductFromCart(String productName) {
 		if (isProductSubElementDataExpected("button", productName, "remove")) {
 			clickSubElementOfProduct("button", productName);
@@ -163,75 +158,30 @@ public class ProductsInventoryPage extends Common { // Inventory (products) page
 	/** ✿ sorting-options section: working on items' list sort-by… functions, for the dropdown selection options ▼ */
 
 	//	implement open Sort DropDown container - lick on Sort icon (for sorting selection options)
-//	☑ TESTED & works properly -> TODO --> Remove comment !
 	public void clickSortOptions() {
 		click(sortOptionsIcon); // click the sort-button to open the various options (second click closes)
 		// driver.findElement(By.cssSelector(".select_container")).click(); // the pre-testNG way to code!
 	}
 
-
-// ◄--- Tested all actions of the above ! ▲  (also see validations below)  ----------------------------------------------------------► |
-// ===	START of section !!! ========================================================================================================= |
-// TODO ------------------------------------------------------------------------------------------------------------------------------ |
 /**	action method: select the relevant sortBy option - by Text (to sort the Products' List display by given order) -- needing arguments:
  *	@param sort	(String arg, sort… By. valid values are: "Name (A to Z)", "Name (Z to A)", "Price (low to high)", "Price (high to low)")
  */	//	clicking relevant sub-element (locating the proper, is done using the above method for targeting the proper SubElementOfProduct)
-//	☑ TESTED & works properly -> TODO --> Remove comment !
 		public void selectSortOptionByText(String sort) { // method use input to find relevant in list (could also be by Attribute) !
 			getSelect().selectByVisibleText(sort);
 			System.out.println("just sorted by: " + sort);
 		}
-///////	Need work !
+
 	//	implement mouse-over & click function, to select given sort, of all available sorting-options (VisibleText input from TestCase)!
 		public void selectMouseOverSortOptionByAttributet(String sortBy) { // method uses input - to find option using the getAttribute!
 		clickSortOptions();
 		sleep(500);
-			// getSelect().selectByVisibleText("Name (Z to A)")
-//		for (WebElement el : sortOptionsList) { // go over all links list
-//			if (getText(el).toLowerCase().contains((sortBy).toLowerCase())) { // find the relevant, looking for the part of VisibleText!
-//				System.out.println("el Text & Value: " + getText(el) + " | " + el.getAttribute("value")); // can also be, by Attributes!
-//				moveTo(el); // mouse-over
-//				sleep(500);
-//			}
-//		}
 	}	
-
-	
-/*
-// Change Sort to: 'Price (low to high)' <- the options located as list of elements (.product_sort_container > option) - USEING:
-		// selectSortOptions.selectByIndex(2); // Index: 2 (3ed one)
-		// selectSortOptions.selectByValue("lohi"); // Value: "lohi"
-		selectSortOptions.selectByVisibleText("Price (low to high)"); // Text: "Price (low to high)"
-		Thread.sleep(1000);
-
- * 
-	public void selectSortOption(String sortBy) { // method uses input to find relevant Lnk in list
-		for (WebElement el : sortOptionsList) { // go over all links list
-			if (getText(el).toLowerCase().contains((sortBy).toLowerCase())) { // find the relevant one, looking for the part of text
-			// if (el.getAttribute("value").contains("sortBy")) {
-				sleep(500);
-				click(el); // click it...
-				break;
-			}
-			else {
-				System.out.println("NOT Found !!! elTxt: " + getText(el) + " | " + el.getAttribute("value"));
-				}
-		}
-	}	
-*/
-
-/** NOTE: the above way ▲  is.../ // TODO -> FIX !!! */
-
-// ====================================================================================================================================|
-// VALIDATIONS section ----------------------------------------------------------------------------------------------------------------|
-// ====================================================================================================================================|
 
 	/** ★★ methods below ▼ wraps various Validating operations ‹-› to be used in Test-Cases, in relevant part of tests' scenarios ★★ */
 
 	/** ✿ general section: inventory page validations ▼ */ // TODO -> implement common page methods as well !!!
 
 	//	validate the current webpage is: inventory page (only by URL)  ->  to verify, you actually got to the expected destination page…
-//	☑ TESTED & works properly -> TODO --> Remove comment !
 	public boolean isInventoryPage() { // no need users' input (this method will have the expected & compare)
 		if (getCurrentUrl().toLowerCase().contains("inventory.html")) { // checking if URL contains expected string (relevant & unique)…
 			return true; // proper page !
@@ -241,7 +191,6 @@ public class ProductsInventoryPage extends Common { // Inventory (products) page
 	}
 
 	//	validate the current webpage is: inventory page (only by page-title compared to expected -> as done on get URL see above…):
-//	☑ TESTED & works properly -> TODO --> Remove comment !
 	public boolean isProductsInventoryPageTitle() { // no need users' input (method already have the expected title, to compare to)
 		if (isDisplayed(pgTitle) && getText(pgTitle).equalsIgnoreCase("PRODUCTS")) { // check element is displayed & match expected
 			return true; // proper page !
@@ -250,18 +199,16 @@ public class ProductsInventoryPage extends Common { // Inventory (products) page
 		}
 	}
 
-	//	✿ ✿ ✿ ✿ ✿ ✿ ✿ ✿ ✿ ✿ ✿ ✿ ✿ ✿ ✿ ✿ ✿ ✿ ✿ ✿ ✿
-	//	TODO -> Needing work on methods-used -and- Checks
 	//	validate the inventory page is properly displayed (all UI elements etc.) --> only if all operands are true, it will return true!
 	//	note: I'm using IF with 'AND' binary operator, so only if all operands are true, the result is true (otherwise, result is false)
 	public boolean isProperProductsInventoryPageUI() {
-		if (isInventoryPage() && // Verify proper page (using method above)… ☑
-			isLogoDisplayed() && // SwagLabs Logo - it is taken from common! ☑
-			isMenuOpenBtnDisplayed() && // Menu btn, also taken from common! ☑
-			isCartBtnDisplayed() && // Shopping cart (empty) -> from common! ☑
-			isProductsInventoryPageTitle() && // Checks that this page Title has proper expected text ("PRODUCTS")… -> see above! ☑
-			isSortContainerDisplayedProperly("name (a to z)") && // 'Sorting' is visible, with default selection-by: "NAME (A to Z)"… ☑
-			isDefaultItemsListDisplayedProperly() // Check the inventory items displayed properly… (below) ☑ -► TODO: Add SORT Display!
+		if (isInventoryPage() && // Verify proper page (using method above)…
+			isLogoDisplayed() && // SwagLabs Logo - it is taken from common!
+			isMenuOpenBtnDisplayed() && // Menu btn, also taken from common!
+			isCartBtnDisplayed() && // Shopping cart (empty) -> from common!
+			isProductsInventoryPageTitle() && // Checks that this page Title has proper expected text ("PRODUCTS")… -> see above!
+			isSortContainerDisplayedProperly("name (a to z)") && // 'Sorting' is visible, with default selection-by: "NAME (A to Z)"…
+			isDefaultItemsListDisplayedProperly() // Check the inventory items displayed properly… (below) -► TODO: Add SORT Display!
 			) {
 			return true;
 		} else {
@@ -272,7 +219,6 @@ public class ProductsInventoryPage extends Common { // Inventory (products) page
 	//	implement boolean function, to validate the ProductsInventoryPage has all needed elements displayed properly, in Default State !
 	//	Note: I'm using IF with OR binary operator, so if at least one operands is true, the result is true! (otherwise result is false)
 	//  I'm using OR because I'm checking that: NO Negative-Condition are to be found !!!
-//	☑ TESTED & works properly
 	public boolean isDefaultItemsListDisplayedProperly() { // checks the inventory items exist with all sun elements…
 		if (isDisplayed(inventory)) { // checks the inventory wrapping-object of all items exist  (not the items objects themselves) !!!
 			List<String> itemsList = listItems(); // using above method, first method (to get all products)
@@ -284,7 +230,7 @@ public class ProductsInventoryPage extends Common { // Inventory (products) page
 					getSubElementDataOfProduct("price", item).isEmpty() ||
 					getSubElementDataOfProduct("button", item).isEmpty() ||
 					getSubElementDataOfProduct("button", item).equalsIgnoreCase("Remove"))
-// -► TODO		// -► TODO - add to method, a relevant condition, that checks the default sorting of List, is displayed by A to Z order…
+					// TODO: add to method, a relevant condition, that checks the default sorting of List, is displayed by A to Z order…
 				{
 					return false; // if its returned, isProperProductsInventoryPageUI method will also return false and Fail TestAssert!
 				}
@@ -292,8 +238,7 @@ public class ProductsInventoryPage extends Common { // Inventory (products) page
 			return true; // true is returned ONLY when no Negative-Condition was found -and- All Items exist with All sections per Each!
 		}
 		return false;
-	}// TODO -> Add Method: DEFAULT Sorting Display of Products-List!
-	//	✿ ✿ ✿ ✿ ✿ ✿ ✿ ✿ ✿ ✿ ✿ ✿ ✿ ✿ ✿ ✿ ✿ ✿ ✿ ✿ ✿ ✿ ✿ ✿ ✿ ✿
+	}
 
 	/** ✿ inventory-items section: items' list of products (and all relevant item-sub-regions), various related validations ▼ */
 	
@@ -302,7 +247,6 @@ public class ProductsInventoryPage extends Common { // Inventory (products) page
  *	@param subElement	(String arg, pointing the sub-element. valid values are: "name", "pic", "desc", "price", "button").
  *	@param productName	(String arg, pin-pointing the Product by Name. Valid value is: any product  (e.g. "Sauce Labs Backpack").
  */	//	fetching relevant data of sub-element (locating the relevant region using the combined methods. above…)
-//	☑ TESTED & works properly -> TODO --> Remove comment !
 	public String getSubElementDataOfProduct(String subElement, String productName) {
 		WebElement element = findSubElementOfProduct(subElement, productName);
 		if (subElement.equalsIgnoreCase("name")) {
@@ -339,7 +283,6 @@ public class ProductsInventoryPage extends Common { // Inventory (products) page
  *	@param productName	(String arg, pin-pointing the Product by Name. Valid value is: any product  (e.g. "Sauce Labs Backpack").
  *	@param dataExpected	(String arg, stating the Expected case. Valid value is: proper Data  (e.g. for "Button": "add" or "remove").
  */	//	comparing fetched data of relevant products' sub-element, to expected result…
-//	☑ TESTED & works properly -> TODO --> Remove comment 
 	public boolean isProductSubElementDataExpected(String subElement, String productName, String dataExpected) {
 		if (getSubElementDataOfProduct(subElement, productName).equalsIgnoreCase(dataExpected)) {
 			return true;
@@ -356,7 +299,6 @@ public class ProductsInventoryPage extends Common { // Inventory (products) page
 	}
 
 	//  implement a boolean function, to validate the Sorting-Component is displayed properly, with the expected sort option (as input)!
-//	☑ TESTED & works properly -> TODO --> Remove comment !
 	public boolean isSortContainerDisplayedProperly(String sortExpected) { // e.g. sortExpected input = "name (a to z)" = Default State!
 		if (isDisplayed(sortOptionsIcon) && // Sorting-Container displayed
 			getActiveSortOption().toLowerCase().contains(sortExpected.toLowerCase()) // see in that method, described just bellow… ▼
@@ -368,7 +310,6 @@ public class ProductsInventoryPage extends Common { // Inventory (products) page
 	}
 
 	//	implement get info, to retrieve the Currently 'Active Sort Option' (to assist with assessing the ActiveSort)
-//	☑ TESTED & works properly -> TODO --> Remove comment !
 	public String getActiveSortOption() { // to be used in assertEquals - compare: actual.toLowerCase() -&- expected.toLowerCase()
 		if (isDisplayed(activeSortOption)) {
 			return getText(activeSortOption); // currently active = any given is only relevant, till becomes obsolete - upon any change!
@@ -460,296 +401,5 @@ public class ProductsInventoryPage extends Common { // Inventory (products) page
 	Collections.sort(listExpected);
 	Collections.sort(listActual);
 	System.out.println(listExpected.equals(listActual)); // true -> after sorting both, they match !!!
-//	-----------------------------------------------------------------
-//	sortOptionsList:
-//	ANOTHER Way to work is by converting one type of list to another:
-//  List<WebElement> sortOptionsList (.product_sort_container)
-//	-----------------------------------------------------------------
-//		// List to hold the value we will return to the caller.
-//	    List<String> currentOptions = new ArrayList<>();
-
-	
-//	    // Pull out the options as web elements
-//	    List<WebElement> options = selectDD.findElements(By.tagName("option"));
-//	    // Traverse the web elements to extract the text. Text gets added to the 'currentOptions' List
-//	    for (WebElement option : options) {
-//	        currentOptions.add(option.getText());
-//	    }
-//		// Loop over List of options & Print the Option text (from String List - instead of from Element List)
-//	    for (String text : currentOptions) {
-//			System.out.println(text);
-//		}
 	}
-
-	// TODO ----------------------------------------------------------------------------------------------------------------------------
-	/* GPT:
-        // Locate the <select> element by its ID, name, CSS selector, or XPath
-        WebElement dropdownElement = driver.findElement(By.id("dropdown")); // Replace with the appropriate locator
-        
-        // Create a Select object
-        Select select = new Select(dropdownElement);
-        
-        // Get all options as a List<WebElement>
-        List<WebElement> options = select.getOptions();
-        
-        // Loop through the options and print their text
-        for (WebElement option : options) {
-            System.out.println(option.getText());
-        }
-	 */
-	// sortOptionsList (detected as a LIST in PageFactory)
-	// implement get info function, and retrieve All Sort Options
-	public String getAllSortOptions() {
-		return "!";
-	}
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////|
-/* TODO
-//Print all sort options options <- the options located as tags under select element (.product_sort_container)
-Perform these steps to operate a drop-down selection menu build like:
-<select id="id" name="nm" class="cl">
-<option value=A"> A </option>
-<option value=B"> B </option>
-</select>
-WebElement el = driver.findElement(By.cssSelector("#id")); // or any other kind locator
-Select selectX = new Select(el); // instead of element you could have enter the locator
--	selectX.selectByIndex(1);  -->  will select the 2ed possibility (starting with 0) !
--	also: selectX.selectByValue("A");  |  selectX.selectByVisibleText("A");
-de-selecting is possible in multi-selection
--	selectX.deselectByVisibleText(" A ")  |  selectX.deselectAll()
-more-selection-possibilities (and there are more)...
--	selectX.getOptions() [returns element not text]
--	also: selectX.getFirstSelectedOption()  |  selectX.getAllSelectedOptions()
-*/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////|
-
-
 }
-/*	END of file…	-------------------------------------------------------------------------------------------------------------------|
-››  TODO - Delete Notes below  ‹‹ 
-
-	Notes ->
-~~~~~~~~~~~~~~~
-
-
-
------------------------------------------------
-	public void addToCart(String productName) {
-		for (WebElement el : inventoryList) {
-			WebElement xName = el.findElement(By.cssSelector(".inventory_item_name"));
-			if (getText(xName).equalsIgnoreCase(productName)) {
-				WebElement xAdd = el.findElement(By.cssSelector(".btn.btn_primary.btn_small.btn_inventory"));
-				click(xAdd);
-				break;
-			} else {System.out.println(getText(xName) + "  didn't match");}
-		} 
-	}
-
-	public void clickSubElementOfProduct(String subElement, String productName) {
-		WebElement element = findSubElementOfProduct(subElement, productName);
-		if (subElement.equalsIgnoreCase("name")) {
-			click(element);
-		} else if (subElement.equalsIgnoreCase("pic")) {
-			click(element);
-		} else if (subElement.equalsIgnoreCase("add")) {
-			click(element);
-		} else if (subElement.equalsIgnoreCase("remove")) {
-			click(element);
-		} else {
-	    	throw new IllegalArgumentException("Problem! maybe input not: name, pic, add, remove  (or: try add added, remove removed)");
-	    }
-	}
-
-====================================
-
-	USE: from BasePage
-	------------------
-    public void assertElementText (WebElement el, String expectedText) -> OR:
-	// implement a function to validate...   TODO ...!
-
-	public void assertDo() { // Checks... as Expected!
-		Assert.assertEquals("Actual", "Expected");
-	}
-==============================================================================================
-see for more references: /SeleniumCourse/src/a_selenium/basics/O_SeleniumGroupingElements.java
-// PART B - Working on INVENTORY:
-// 11.
-		// Get All Items on inventory Page as a List of WebElement having a subset of elements within them (at lower level)...
-		List<WebElement> inventoryList = driver.findElements(By.cssSelector(".inventory_list .inventory_item"));
-// 12.
-		// Using 'for' loop (instead of 'for-each') -> I will go over list of elements & for every one, I will get Relevant Sub Data !!!
-		// Print for All Items list only: Name & Price -> Needing to find the sub-elements of a specific WebElement & get their Data !!!
-		System.out.println("Inventory List Items - Orig State, Before Sort:");
-		for (int i = 0; i < inventoryList.size(); i++) {
-			// System.out.println(inventoryList.get(i).getText()); // Print All Data of All Inventory List Items
-			String elName = inventoryList.get(i).findElement(By.cssSelector(".inventory_item_name")).getText();
-			String elPrice = inventoryList.get(i).findElement(By.cssSelector(".inventory_item_price")).getText();
-			System.out.println("el-Name: " + elName + ", el-Price: " + elPrice); // price format = '$29.99'
-		}
-		// Example also of using 'For Each'...
-//		System.out.println("Inventory List Items - Orig State, Before Sort - ONLY Name & Price:");
-//		for (WebElement el : inventoryList) {
-//			String elName = el.findElement(By.cssSelector(".inventory_item_name")).getText();
-//			String elPrice = el.findElement(By.cssSelector(".inventory_item_price")).getText();
-//			System.out.println("el-Name: " + elName + ", el-Price: " + elPrice);
-//			}
-// 13.	
-		// For Assertion, add a List to hold all number values of prices --> will be derived from the ITEMs inventoryList as following :
-		List<Double> byPriceNumber = new ArrayList<>(); // New List (of orig state, before sort)
-		// Traverse the Orig inventoryList WebElements list (traverse meaning: go over all parts), and extract price number to above ^ !
-		for (WebElement el : inventoryList) {
-			String elPrice = el.findElement(By.cssSelector(".inventory_item_price")).getText(); // price is a sub-element of an ITEM !!!
-			// System.out.println("el-Price: " + elPrice); // Print String as is: $15.99
-	        String onlyPrice = elPrice.replace("$", ""); // replace & REMOVE the $ sign from string, to keep only text of number chars !
-	        Double priceNmber = Double.parseDouble(onlyPrice); // PARSE & convert the String (textual-chars) to Double (number) type ...
-	        // System.out.println(priceNmber); // ->  output = 15.99
-			byPriceNumber.add(priceNmber); // add each found price to the List of byPriceNumber to be sorted for Asserting
-		}
-		// Sorting the NEW List in Ascending \ Descending order (& Printing after Sort) -and- Asserting proper order
-		Collections.sort(byPriceNumber); // Ascending (low to high) --> NOW this List is of orig state before sort, but locally sorted !
-		// Collections.sort(byPriceNumber, Collections.reverseOrder()); // Descending (high to low)
-		for (Double price : byPriceNumber) { // Traverse the byPrice elements
-			System.out.println("price only (before sort, but array sorted): " + price); // Redundant !
-		}
-		System.out.println("END of part B");
-		Thread.sleep(1000);
-//-----------------------------
-// PART C - Working on SORTING:
-// 14.	
-->		// Print Currently Active Sort -> Active don't have same locator as Options - should be located separately & -used dynamically !
-->		WebElement SortActiveOption = driver.findElement(By.cssSelector(".active_option")); // currently active select = unique locator!
-		String activeSortOption = SortActiveOption.getText(); // currently active (soon as given vale, it becomes obsolete upon change)!
-		System.out.println("Active Sorting is: " + activeSortOption); // better use as seen bellow (on next step) ...
-// 15.	
-->		// Click Sort icon to Open Selection container
-->		driver.findElement(By.cssSelector(".select_container")).click();
-// 16.	
-//		//Print all sort options options <- the options located as tags under select element (.product_sort_container)
-//			Perform these steps to operate a drop-down selection menu build like:
-//			<select id="id" name="nm" class="cl">
-//				<option value=A"> A </option>
-//				<option value=B"> B </option>
-//			</select>
-//		WebElement el = driver.findElement(By.cssSelector("#id")); // or any other kind locator
-//		Select selectX = new Select(el); // instead of element you could have enter the locator
-//		-	selectX.selectByIndex(1);  -->  will select the 2ed possibility (starting with 0) !
-//		-	also: selectX.selectByValue("A");  |  selectX.selectByVisibleText("A");
-//		de-selecting is possible in multi-selection
-//		-	selectX.deselectByVisibleText(" A ")  |  selectX.deselectAll()
-//		more-selection-possibilities (and there are more)...
-//		-	selectX.getOptions() [returns element not text]
-// 		-	also: selectX.getFirstSelectedOption()  |  selectX.getAllSelectedOptions()
-
-->		// to work on Options we need to have the Element + Select Object initialized
-->		WebElement sortOptions = driver.findElement(By.cssSelector(".product_sort_container")); // Options selection have other locator!
-		Select selectSortOptions = new Select(sortOptions); // the Object manages the operations possibilities on: options selections !!
-		// work on options
-		System.out.println("\n-- Print of all SORTING Options :    \n - " + 
-				selectSortOptions.getOptions().get(0).getText() + "\n - " + 
-				selectSortOptions.getOptions().get(1).getText() + "\n - " + 
-				selectSortOptions.getOptions().get(2).getText() + "\n - " + 
-				selectSortOptions.getOptions().get(3).getText());
-// 17.	
-		// Validation Current Active Selection Equals to the First Option -> Select Object works only on 'select' HTML tag with options!
-		String sortFirstOption = selectSortOptions.getFirstSelectedOption().getText(); // capability of Select Object
-		System.out.println("First Sort Option is: " + sortFirstOption);
-		// make Assertion for comparison with active set above ^...
-		Assert.assertEquals(activeSortOption.toLowerCase(), sortFirstOption.toLowerCase());
-		System.out.println("Passed Assertion for comparison with Active");
-		
-	    //	ANOTHER Way to work is by converting one type of list to another:
-//	    	-----------------------------------------------------------------
-//		// List to hold the value we will return to the caller.
-//	    List<String> currentOptions = new ArrayList<>();
-//		// Find the 'Selection Drop Down' on the page.
-//	    WebElement selectDD = driver.findElement(By.cssSelector(".product_sort_container"));
-//	    // Pull out the options as web elements
-//	    List<WebElement> options = selectDD.findElements(By.tagName("option"));
-//	    // Traverse the web elements to extract the text. Text gets added to the 'currentOptions' List
-//	    for (WebElement option : options) {
-//	        currentOptions.add(option.getText());
-//	    }
-//		// Loop over List of options & Print the Option text (from String List - instead of from Element List)
-//	    for (String text : currentOptions) {
-//			System.out.println(text);
-//		}
-
-		System.out.println("END of part C");
-		Thread.sleep(1000);
-//-------------------------
-
-		// PART D - Working on SORT Assertion
-// 18.	
-		// Change Sort to: 'Price (low to high)' <- the options located as list of elements (.product_sort_container > option) - USEING:
-		// selectSortOptions.selectByIndex(2); // Index: 2 (3ed one)
-		// selectSortOptions.selectByValue("lohi"); // Value: "lohi"
-		selectSortOptions.selectByVisibleText("Price (low to high)"); // Text: "Price (low to high)"
-		Thread.sleep(1000);
-// 19. 
-		// Validate Currently Active Selection Type is correlative to the change made
-		System.out.println("NEW Active Sort: " + driver.findElement(By.cssSelector(".active_option")).getText()); // currently active !!
-		// Note: System.out.println("Active Sorting is: " + activeSortOption); will show the text already given to it earlier in flow !!
-		String newActiveSort = driver.findElement(By.cssSelector(".active_option")).getText();
-		String expectedActive = "PRICE (LOW TO HIGH)";
-		Assert.assertEquals(newActiveSort.toLowerCase(), expectedActive.toLowerCase());
-		System.out.println("Passed Assertion for second comparison with NEW Active");
-		Thread.sleep(1000);
-// 20.	
-		// Add ARRAY to collect all prices for compare -&- Validate the sort was made, and items inventory order changed accordingly ...
-		inventoryList = driver.findElements(By.cssSelector(".inventory_list .inventory_item")); // to set list again (and not use prev)!
-		// NOTE: the above list was already declared above and was initialized with value before sorting so we need to do it once again!
-		// For Assert, add another List to hold all number values of prices (will be derived from the ITEMs inventoryList as following):
-		List<Double> byPriceNumberAfterSort = new ArrayList<>(); // New List
-		// Traverse the Orig inventoryList WebElements list (traverse meaning: go over all parts), and extract price number to above ^ !
-		for (WebElement el : inventoryList) {
-			String elPrice = el.findElement(By.cssSelector(".inventory_item_price")).getText(); // price is a sub-element of an ITEM !!!
-			// System.out.println("el-Price: " + elPrice); // Print String as is: $15.99
-	        String onlyPrice = elPrice.replace("$", ""); // replace & REMOVE the $ sign from string, to keep only text of number chars !
-	        Double priceNmber = Double.parseDouble(onlyPrice); // PARSE & convert the String (textual-chars) to Double (number) type ...
-	        // System.out.println(priceNmber); // ->  output = 15.99
-	        byPriceNumberAfterSort.add(priceNmber); // add each found price to List of byPriceNumberAfterSort, to be sorted for Assert !
-		}
-		// PRINT the NEW List
-		for (Double price : byPriceNumberAfterSort) { // Traverse the byPrice elements
-			System.out.println("price only After Sorting: " + price); // Redundant !
-		}
-		// Assert Sort - validate 2 Lists
-		Assert.assertEquals(byPriceNumberAfterSort, byPriceNumber); // Check If Lists Equal (after sort = before sort, but sorted #13)!
-
-		boolean ascendingOrder = true; // given proper ascending order
-		for (int i = 1; i < byPriceNumberAfterSort.size(); i++) { // starting with 2ed limb & check till last one in list
-			if (byPriceNumberAfterSort.get(i-1) > byPriceNumberAfterSort.get(i)) { // check if its smaller then prev limb
-				ascendingOrder = false; // if one meats condition then list is not in ascending order --> change to false
-			}
-		}
-		Assert.assertTrue(ascendingOrder, "proper ascending order");
-		System.out.println("- Price -> After Sorting Price Ascending - Order  as expected -> " + ascendingOrder); // Redundant !
-		Thread.sleep(1000);
-// 21.   
-		// Re-Print Items list with both Name & Price (to see Sorting effect)
-		System.out.println("Inventory List Items - After Sort:");
-		for (int i = 0; i < inventoryList.size(); i++) {
-			String elName = inventoryList.get(i).findElement(By.cssSelector(".inventory_item_name")).getText();
-			String elPrice = inventoryList.get(i).findElement(By.cssSelector(".inventory_item_price")).getText();
-			System.out.println("el-Name: " + elName + ", el-Price: " + elPrice);
-		}
-		//
-		System.out.println("END of part D");
-		
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|
---------------------------------- New Part ▼
-	More examples (to work with)…
-	=============================
-
-	public void processArgs(String arg1, int arg2) {
-    // Valid values for arg1: "xxx", "yyy", "zzz"
-    if (!"xxx".equals(arg1) && !"yyy".equals(arg1) && !"zzz".equals(arg1)) {
-        throw new IllegalArgumentException("Invalid value for arg1");
-    }
-    // Valid values for arg2: 1, 2, 3
-    if (arg2 != 1 && arg2 != 2 && arg2 != 3) {
-        throw new IllegalArgumentException("Invalid value for arg2");
-    }
-    // Method implementation for valid arguments
-    // ...
-	}
-◄ ▲ ▼ ►
-*/
