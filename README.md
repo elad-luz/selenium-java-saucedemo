@@ -30,9 +30,9 @@ Installation, Setup and Run Test (after preparing it properly):
 1. Pre-Condition - having Visual-Studio-Code (or any other alternative equivalent), Java -&- Maven.
 2. Install relevant dependencies: java etc.
 3. Clone this GIT repository to your local machine.
-4. To run the Java-API tests locally, using VCS:
-    - RightClick ApiClientTest.java (under: `src\main\java\API_JavaTestingInfra`) -&- Click: Run Java -> See results in Terminal...
-5. Running the Selenium tests-cases locally, using the 'Command-Line' (CMD):
+4. To run the tests locally (e.g. using VCS):
+    - Select any Test_Name.java (under: `<ROOT>\src\test\java\saucedemo\testcases`) -&- RightClick the Run Option (next to Tests methods) -> See results in Terminal...
+5. Running the Selenium tests-cases locally & Generating Allure-Report on the flight, using the 'Command-Line' (CMD):
     - Open CMD & open the project-root-folder.
     - issue maven command  →  `mvn clean test -DsuiteXmlFile=testng.xml` (till finish).
     - For generating the Allure-Test-Results html report, run via same CMD the following command  →  `mvn allure:serve` (will open).
