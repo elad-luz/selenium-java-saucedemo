@@ -50,7 +50,7 @@ public abstract class BasePage { // ☑ Page-Parent ► The SUPER for all pages 
 	public void click(WebElement el) {
 		waitForElementVisibility(el); // method checking Visibility (bellow…), make-use of Try-Catch mechanism to give feedback if not !
 		waitForElementClickability(el);
-		// highlightElement(el, "Lime"); // only background color!  TODO -► mark-out the highlight & sleep, if Real Testing (not DEMO mode)
+		highlightElement(el, "Lime"); // only background color!  TODO -► mark-out the highlight & sleep, if Real Testing (not DEMO mode)
 		sleep(500); // added sleep -> only to slow the test-steps a bit, so it actually look as if an operation was made on the element!
 		el.click();
 	}
